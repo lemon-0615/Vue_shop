@@ -36,5 +36,20 @@ window.sessionStorage.setItem("token", res.data.token)
 ```
 this.$router.push('/home')
 ```
+### 路由导航守卫控制访问权限
 
+```
+router.beforeEach((to,from,next) => {
+  // to 将要访问的路径
+  // from 代表从哪一个路径跳转而来
+  // next 是一个函数， 表示放行
+  //   next()  放行     next('/login') 强制跳转
+  if(to.path === '/login') return next();
+  // 获取 token
+  const tokenStr = window.sessionStorage.getItem('token')
+  if (!tokenStr) return next('./login')
+  next()
+})
+
+```
   
