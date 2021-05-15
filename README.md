@@ -52,4 +52,44 @@ router.beforeEach((to,from,next) => {
 })
 
 ```
-  
+### 获取左侧菜单数据
+```
+data() {
+    return {
+      // 左侧菜单数据
+      menulist: []
+    }
+  },
+  created() {
+    this.getMenuList()
+  },
+// 获取左侧所有的菜单
+    async getMenuList() {
+      const {data: res} = await this.$http.get('menus')
+      if(res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.menulist = res.data
+     console.log(res)
+```
+### 用双层for循环渲染左侧菜单
+```
+<el-submenu :index="item.id+''"  v-for = "item in menulist" :key="item.id">
+         <!--一级菜单的模板区域-->
+        <template slot="title">
+           <!--图表-->
+          <i class="el-icon-location"></i>
+           <!--文本-->
+          <span>{{item.authName}}</span>
+        </template>
+         <!--二级菜单-->
+           <el-menu-item :index="subItem.id+''" v-for="subItem in item.children" :key="subItem.id">
+               <!--一级菜单的模板区域-->
+          <template slot="title">
+           <!--图表-->
+          <i class="el-icon-location"></i>
+           <!--文本-->
+          <span>{{subItem.authName}}</span>
+           </template>
+           </el-menu-item>
+      </el-submenu>
+      
+      ```
