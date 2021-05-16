@@ -93,3 +93,13 @@ data() {
       </el-submenu>
       
   ```
+  
+  ### 侧边栏选中项的高亮
+  点击的菜单值的index保存在sessionStorage中，即保存左侧边栏菜单的激活状态
+  
+```
+ saveNavState(activePath) {
+      window.sessionStorage.setItem('activePath',activePath)
+      this.activePath = activePath
+    }
+  ```
