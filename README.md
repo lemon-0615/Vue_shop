@@ -103,3 +103,21 @@ data() {
       this.activePath = activePath
     }
   ```
+  
+   ### 用户列表-实现搜索功能
+   + 监听switch开关状态的change事件
+   + 拿到状态后立即发起ajax请求，调用接口把状态同步到服务器
+   ```
+   // 监听 switch 开关状态的改变
+    async userStateChanged(userinfo) {
+      console.log(userinfo)
+      const { data: res } = await this.$http.put(
+        `users/${userinfo.id}/state/${userinfo.mg_state}`
+      )
+      if (res.meta.status !== 200) {
+        userinfo.mg_state = !userinfo.mg_state
+        return this.$message.error('更新用户状态失败！')
+      }
+      this.$message.success('更新用户状态成功！')
+    }
+   ```
