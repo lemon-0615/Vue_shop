@@ -23,7 +23,20 @@ yarn lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+## Build Setup setup
+```
+# clone the project
+git clone https://github.com/lemon-0615/vue_shop.git
 
+# enter the project directory
+cd vue_shop
+
+# install dependency
+npm install
+
+# develop
+npm run serve
+```
 ## 过程笔记
 ### 登录成功之后的操作：
 
