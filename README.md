@@ -227,11 +227,14 @@ data() {
    ```
    
    ### 修改用户，根据id查询用户信息
-   （通过作用域插槽接受到了scope数据对象) 
-   外侧　<template slot-scope="scope"> <br />
+  （通过作用域插槽接受到了scope数据对象) 
+  
+   外侧　<template slot-scope="scope">
    (用scope.row拿到这一行数据 ) <br />
-   里侧　<el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>      <br />
- 拿到id后，调用相应接口获取信息，其路径是users/:id
+ 
+   里侧　<el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button> 
+   
+   拿到id后，调用相应接口获取信息，其路径是users/:id
 
   ```
   // 修改用户信息并提交
