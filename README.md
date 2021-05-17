@@ -274,3 +274,38 @@ data() {
   
   <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px">
     :model 数据绑定　:rules 验证规则对象　ref 表单的引用
+ 
+ ### 提交表单完成用信息的修改
+   1. 在验证通过之后发起put请求，将需要提交的数据放在请求上
+   2. 若修改成功，状态码为200
+     + 关闭对话框
+     + 刷新数据列表 
+     + 提示修改成功
+
+  ``` 
+       // 修改用户信息并提交
+    editUserInfo() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return
+        // 发起修改用户信息的数据请求
+        const { data: res } = await this.$http.put(
+          'users/' + this.editForm.id,
+          {
+            email: this.editForm.email,
+            mobile: this.editForm.mobile
+          }
+        )
+
+        if (res.meta.status !== 200) {
+          return this.$message.error('更新用户信息失败！')
+        }
+
+        // 关闭对话框
+        this.editDialogVisible = false
+        // 刷新数据列表
+        this.getUserList()
+        // 提示修改成功
+        this.$message.success('更新用户信息成功！')
+      })
+    },
+     ```
