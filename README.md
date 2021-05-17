@@ -227,7 +227,7 @@ data() {
    ```
    
    ### 修改用户，根据id查询用户信息
-   （通过作用域插槽接受到了scope数据对象) <br/>
+   （通过作用域插槽接受到了scope数据对象) 
    外侧　<template slot-scope="scope"> <br />
    (用scope.row拿到这一行数据 ) <br />
    里侧　<el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>      <br />
@@ -263,7 +263,7 @@ data() {
  
   ### 修改表单的渲染
    // 查询到的用户信息对象 <br/>
-  editForm: {},  <br/>
+  editForm: {}, 
   
   <el-form :model="editForm" :rules="editFormRules" ref="editFormRef" label-width="70px">
     :model 数据绑定　:rules验证规则对象　ref 表单的引用
