@@ -38,7 +38,7 @@ npm install
 npm run serve
 ```
 ## 过程笔记
-### 前端项目
+### 前端项目初试化步骤
  1. 安装Vue脚手架
  2. 通过Vue脚手架创建项目
  3. 配置Vue路由
@@ -57,7 +57,35 @@ npm run serve
     + 通过seeion在服务器端记录状态
     + 通过token方式维持状态
     
-### 登录成功之后的操作：
+### 表单内容数据验证
++ 为<el-form>通过属性绑定指定一个rules校验对象
++ 在data数据中定义校验对象rules，每一个属性对应一个规则
++ 为不同表单项，通过prop指定不同验证规则进行验证
+
+```
+  <!--登录表单区域-->
+    <el-form  ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
+
+        // 这是登录表单的数据绑定对象
+      loginForm: {
+        username: 'admin',
+        password: '123456'
+      },
+       // 这是表单的验证规则对象
+      loginFormRules: {
+        // 验证用户名是否合法
+        username: [
+          { required: true, message: '请输入登录名称', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        // 验证密码是否合法
+        password: [
+          { required: true, message: '请输入登录密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+        ]
+      }
+   ```
+### 登录成功之后的操作
 
 + 把服务器给颁发的token信息记录到客户端的seisionStorage中，因为项目中除了登录之外的其他API接口，必须在登录之后才能访问，即给其他接口提供了身份验证信息 </li>
  ```
