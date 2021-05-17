@@ -225,3 +225,44 @@ data() {
       this.$message.success('更新用户状态成功！')
     }
    ```
+   
+   ### 修改用户，根据id查询用户信息
+   （通过作用域插槽接受到了scope数据对象)
+   外侧   <template slot-scope="scope">
+   (用scope.row拿到这一行数据 )
+   里侧<!-- 修改按钮 -->
+      <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
+ 拿到id后，调用相应接口获取信息，其路径是users/:id
+
+ ```
+  // 修改用户信息并提交
+    editUserInfo() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return
+        // 发起修改用户信息的数据请求
+        const { data: res } = await this.$http.put(
+          'users/' + this.editForm.id,
+          {
+            email: this.editForm.email,
+            mobile: this.editForm.mobile
+          }
+        )
+
+        if (res.meta.status !== 200) {
+          return this.$message.error('更新用户信息失败！')
+        }
+
+        // 关闭对话框
+        this.editDialogVisible = false
+        // 刷新数据列表
+        this.getUserList()
+        // 提示修改成功
+        this.$message.success('更新用户信息成功！')
+      })
+    },
+  
+     ```
+    
+    ### 修改表单的渲染
+      // 查询到的用户信息对象
+      editForm: {},      
