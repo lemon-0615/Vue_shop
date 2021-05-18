@@ -313,3 +313,35 @@ data() {
     },
     
    ```
+   
+   ### 调用API获取权限列表的数据
+   * 请求路径：rights/:type
+   * 请求方法： get
+```
+<el-table :data="rightsList">
+
+export default {
+  data() {
+    return {
+      // 权限列表
+      rightsList: []
+    }
+  },
+  created() {
+    // 获取所有的权限
+    this.getRightsList()
+  },
+  methods: {
+    // 获取权限列表
+    async getRightsList() {
+      const { data: res } = await this.$http.get('rights/list')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取权限列表失败！')
+      }
+
+      this.rightsList = res.data
+      console.log(this.rightsList)
+    }
+  }
+}
+```
