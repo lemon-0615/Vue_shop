@@ -394,11 +394,12 @@ async removeRightById(role, rightId){
    *  通过:data绑定数据源
    *  通过:props指定属性绑定对象
    *  复选框show-checkbox
-   *  为每个结点绑定了选中后的值id => <h4>node-key="id"</h4>
+   *  为每个结点绑定了选中后的值id-><h4>node-key="id"</h4>
+   *  已有权限默认勾选,在点击分配权限按钮后立即获取角色中已有的三级权限下的id，把所有id添加到数组defKeys中，将这个数组通过属性绑定交给default-checked-keys
    
    ```
     <!--树形控件-->
-    <el-tree :data="rightslist" :props="treeProps" show-checkbox node-key="id" default-expand-all></el-tree>
+    <el-tree :data="rightslist" :props="treeProps" show-checkbox node-key="id" default-expand-all :default-checked-keys="defKeys"></el-tree>
        treeProps: {
                 label: 'authName',
                 children: 'children'
