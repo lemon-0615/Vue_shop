@@ -401,5 +401,5 @@ async removeRightById(role, rightId){
                 label: 'authName',
                 children: 'children'
             }
-     ```
+   ```
         
