@@ -388,5 +388,18 @@ async removeRightById(role, rightId){
             }
             role.children = res.data
         }
-        ```
+   ```
+   ### el-tree树形结构
+   * 全局注册tree组件，在页面上进行引用
+   *  通过:data绑定数据源
+   *  通过:props指定属性绑定对象
+   
+   ```
+    <!--树形控件-->
+      <el-tree :data="rightslist" :props="treeProps"></el-tree>
+       treeProps: {
+                label: 'authName',
+                children: 'children'
+            }
+     ```
         
