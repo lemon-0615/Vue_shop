@@ -393,10 +393,12 @@ async removeRightById(role, rightId){
    * 全局注册tree组件，在页面上进行引用
    *  通过:data绑定数据源
    *  通过:props指定属性绑定对象
+   *  复选框show-checkbox
+   *  为每个结点绑定了选中后的值id => <h4>node-key="id"</h4>
    
    ```
     <!--树形控件-->
-      <el-tree :data="rightslist" :props="treeProps"></el-tree>
+    <el-tree :data="rightslist" :props="treeProps" show-checkbox node-key="id" default-expand-all></el-tree>
        treeProps: {
                 label: 'authName',
                 children: 'children'
