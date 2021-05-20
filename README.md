@@ -348,3 +348,45 @@ export default {
  
 ### 权限管理业务分析
 * 通过权限管理模块控制不同的用户可以进行哪些操作，具体可以通过角色的方式进行控制，即每个用户分配一个特定的角色，角色包括不同的功能权限。
+
+### 删除指定权限的功能
+```
+ <template slot-scope="scope">
+   <el-row v-for="(item1) in scope.row.children" :key="item1.id">
+      <!-- 渲染一级权限 -->
+         <el-col :span="5">
+           <el-tag>{{item1.authName}}</el-tag>
+         </el-col>
+      <!-- 渲染二级和三级权限 -->
+          <el-col :span="19"> </el-col>
+       </el-row>
+          <pre>
+           {{scope.row}}
+           </pre>
+   </template>
+  ```
+### for循环渲染一级权限（角色列表)
+* 为了防止每一次删除之后表格合起，把服务器返回的最新权限直接赋值给childern属性
+ ```
+<el-tag type="warning" v-for="(item3) in item2.children" :key="item3.id" closable @close="removeRightById(scope.row, item3.id)">{{item3.authName}}</el-tag>
+async removeRightById(role, rightId){
+            //弹框提示用户是否删除
+            const confirmResult = await this.$confirm('此操作将永久删除该文件，是否继续？',
+                '提示',
+                {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }
+            ).catch(err => err)
+            if(confirmResult!=='confirm'){
+                return this.$message.info('取消了删除!')
+            }
+            const {data: res}=await this.$http.delete(`roles/${role.id}/rights/${role.id}`)
+            if(res.meta.status!==200){
+                return this.$message.error('删除权限数据失败！')
+            }
+            role.children = res.data
+        }
+        ```
+        
