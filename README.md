@@ -480,9 +480,11 @@ async removeRightById(role, rightId){
      </tree-table>
     ```
      
-     
-  ### 分页功能实现
-     * 渲染分页页码条
+ ### 分页功能实现
+  * 渲染分页页码条<el-pagination> </el-pagination>
+  * 增加事件处理函数，handleSizeChange(newSize)来监听pagesize改变
+  * 增加事件处理函数，handleCurrentChange(newPage)监听 pagenum 改变
+    
   ```
      
      <!--分页区域-->
@@ -495,6 +497,7 @@ async removeRightById(role, rightId){
     },
      // 监听 pagenum 改变
     handleCurrentChange(newPage) {
+     //拿到新的页码值之后，立即给querInfo里的newPage赋值
       this.querInfo.pagenum = newPage
       this.getCateList()
     }
