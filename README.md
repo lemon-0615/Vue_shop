@@ -427,7 +427,7 @@ async removeRightById(role, rightId){
     },
   ```
  
-  ### 通过使用vue-table-with-grid树形表格组件
+  ### 通过使用vue-table-with-grid树形表格组件（利用作用域插槽和模板形式渲染结构)
    * 用自定义模板渲染表格数据，为table指定列的定义
    * 渲染分类是否有效对应的UI结构
    * 渲染排序，操作对应的UI结构
@@ -479,3 +479,24 @@ async removeRightById(role, rightId){
          </template>
      </tree-table>
     ```
+     
+     
+  ### 分页功能实现
+     * 渲染分页页码条
+  ```
+     
+     <!--分页区域-->
+     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="querInfo.pagenum" :page-sizes="[3, 5, 10,15]" :page-               size="querInfo.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+    </el-pagination>
+      // 监听pagesize改变
+    handleSizeChange(newSize){
+          this.querInfo.pagesize = newSize
+          this.getCateList()
+    },
+     // 监听 pagenum 改变
+    handleCurrentChange(newPage) {
+      this.querInfo.pagenum = newPage
+      this.getCateList()
+    }
+     
+   ```
