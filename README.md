@@ -431,6 +431,7 @@ async removeRightById(role, rightId){
    * 用自定义模板渲染表格数据，为table指定列的定义
    * 渲染分类是否有效对应的UI结构
    * 渲染排序，操作对应的UI结构
+     
   ```
   // 为table指定列的定义
       columns:[{
@@ -459,6 +460,9 @@ async removeRightById(role, rightId){
           template: 'opt'
         }    
       ]
+      ```
+ 
+      ```
    <!--表格-->
      <tree-table class="treeTable" :data="catelist" :columns="columns" :selection-type="false" :expand-type="false" show-index index-text='#'  border :show-row-  hover="false">
           <!--是否有效-->
@@ -478,13 +482,13 @@ async removeRightById(role, rightId){
           <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
          </template>
      </tree-table>
-    ```
-     
- ### 分页功能实现
+ ```
+ 
+### 分页功能实现
   * 渲染分页页码条<el-pagination> </el-pagination>
   * 增加事件处理函数，handleSizeChange(newSize)来监听pagesize改变
   * 增加事件处理函数，handleCurrentChange(newPage)监听 pagenum 改变
-    
+        
   ```
      
      <!--分页区域-->
