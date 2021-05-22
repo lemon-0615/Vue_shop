@@ -561,3 +561,86 @@ async removeRightById(role, rightId){
       this.parentCateList = res.data
     }
 ```
+     
+ ### 渲染添加分类的对话框
+     使用cascader级联选择器
+```
+ //<el-cascader v-model="value" :options="options" :props="{ expandTrigger: 'hover' }" @change="handleChange"> </el-cascader>
+<el-cascader expand-trigge ="hover" :options="parentCateList"  :props="cascaderProps" v-model="selectedKeys" @change="parentCateChanged" clearable change-on-select></el-cascader>
+ ```
+ * options="parentCateList"   用来指定数据源   
+ * props 级联选择器的用来指定配置对象
+ * v-model 绑定值选中的父级分类的Id数组，一定要是数组，双向绑定级联选择框中选中的value值
+     
+  ```
+  //在data()中
+   // 父级分类的列表
+      parentCateList: [],
+   //指定级联选择器的配置对象
+      cascaderProps: {
+        value: 'cat_id', //选定的值
+        label: 'cat_name',  //看到的值
+        children: 'children'
+      },
+     // 选中的父级分类的Id数组
+      selectedKeys: []
+```
+   * 当级联选择框变化，触发handleChange事件，就是parentCateChanged函数，可返回选中项的值，选择项发生变化触发这个函数
+```     
+     //选择项发生变化触发这个函数
+    parentCateChanged(){
+      console.log(this.selectedKeys)
+      // 如果 selectedKeys 数组中的 length 大于0，证明选中的父级分类
+      // 反之，就说明没有选中任何父级分类
+          if (this.selectedKeys.length > 0) {
+        // 父级分类的Id
+        this.addCateForm.cat_pid = this.selectedKeys[
+          this.selectedKeys.length - 1
+        ]
+        // 为当前分类的等级赋值
+        this.addCateForm.cat_level = this.selectedKeys.length
+        return
+      } else {
+        // 父级分类的Id
+        this.addCateForm.cat_pid = 0
+        // 为当前分类的等级赋值
+        this.addCateForm.cat_level = 0
+      }
+    },
+    ```
+  * 点击对话框的确定按钮，添加新的分类（要进行预验证）
+     
+   ```
+    addCate() {
+      //表单的预验证
+      this.$refs.addCateFormRef.validate(async valid => {
+        if (!valid) return  //失败
+        // 成功就post对象
+        const { data: res } = await this.$http.post(
+          'categories',
+          this.addCateForm
+        )
+
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加分类失败！')
+        }
+
+        this.$message.success('添加分类成功！')
+        // 刷新数据列表
+        this.getCateList()
+        this.addCateDialogVisible = false
+      })
+    }
+    ```
+     
+   * 监听对话框的关闭事件，重置表单数据
+    ```
+    <!--添加分类的对话框-->
+    <el-dialog title="添加分类" :visible.sync="addCateDialogVisible" width="50%"  @close="addCateDialogClosed">
+    addCateDialogClosed() {
+      this.$refs.addCateFormRef.resetFields()
+      this.selectedKeys = []
+      this.addCateForm.cat_level = 0
+      this.addCateForm.cat_pid = 0
+    }
+   ```
