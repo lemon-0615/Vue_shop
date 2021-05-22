@@ -422,6 +422,7 @@ async removeRightById(role, rightId){
 ```
 <!-- 分配权限的对话框 -->
     <el-dialog title="分配权限" :visible.sync="setRightDialogVisible" width="50%" @click="setRightDialogClosed">
+     
   setRightDialogClosed(){
      this.defKeys = []
     },
@@ -507,3 +508,36 @@ async removeRightById(role, rightId){
     }
      
    ```
+### 商品分类中分类数据列表
+  * 为按钮绑定点击事件showAddCateDialog
+     
+   ```
+     <el-button type="primary" @click="showAddCateDialog">添加分类</el-button>
+    
+   ```
+     
+  * 定义点击按钮事件
+     
+   ```
+     //点击按钮，展示添加分类的对话框
+    showAddCateDialog(){
+       // 先获取父级分类的数据列表
+      this.getParentCateList()
+      // 再展示出对话框
+      this.addCateDialogVisible = true
+    },
+   ```
+  * 调用get请求，获取父级分类的列表的数据
+  
+```
+      async getParentCateList(){
+        const {data:res} = await this.$http.get('categories',
+         {params: {type:2}})
+         
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取父级分类数据失败！')
+      }
+      console.log(res.data)
+      this.parentCateList = res.data
+    }
+```
