@@ -608,8 +608,8 @@ async removeRightById(role, rightId){
       }
     },
     ```
-  * 点击对话框的确定按钮，添加新的分类（要进行预验证）
      
+  * 点击对话框的确定按钮，添加新的分类（要进行预验证）
    ```
     addCate() {
       //表单的预验证
@@ -632,15 +632,15 @@ async removeRightById(role, rightId){
       })
     }
     ```
-     
+      
    * 监听对话框的关闭事件，重置表单数据
-    ```
+ ```
     <!--添加分类的对话框-->
-    <el-dialog title="添加分类" :visible.sync="addCateDialogVisible" width="50%"  @close="addCateDialogClosed">
+  <el-dialog title="添加分类" :visible.sync="addCateDialogVisible" width="50%"  @close="addCateDialogClosed">
     addCateDialogClosed() {
       this.$refs.addCateFormRef.resetFields()
       this.selectedKeys = []
       this.addCateForm.cat_level = 0
       this.addCateForm.cat_pid = 0
     }
-   ```
+  ```
