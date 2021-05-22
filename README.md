@@ -607,10 +607,10 @@ async removeRightById(role, rightId){
         this.addCateForm.cat_level = 0
       }
     },
-    ```
+```
      
   * 点击对话框的确定按钮，添加新的分类（要进行预验证）
-   ```
+  ```
     addCate() {
       //表单的预验证
       this.$refs.addCateFormRef.validate(async valid => {
@@ -631,8 +631,7 @@ async removeRightById(role, rightId){
         this.addCateDialogVisible = false
       })
     }
-    ```
-      
+```  
    * 监听对话框的关闭事件，重置表单数据
  ```
     <!--添加分类的对话框-->
