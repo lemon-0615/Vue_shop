@@ -643,3 +643,59 @@ async removeRightById(role, rightId){
       this.addCateForm.cat_pid = 0
     }
   ```
+ ### 分类参数
+    * el-tabs 组件页签，el-tab-pane 组件面板
+    ```
+     <!-- tab 页签区域 -->
+      // v-model => 将激活的页签name名称动态地绑定到对应的值身上；点击事件@tab-click，点击页签后触发的函数
+      <el-tabs v-model="activeName" @tab-click="handleTabClick"> 
+           <!-- 添加动态参数的面板 -->
+        <el-tab-pane label="动态参数" name="many"> //label来指定显示的标题，name是页签的唯一名称
+         <!-- 添加静态属性的面板 -->
+        <el-tab-pane label="静态属性" name="only">
+    ```
+     *  级联选择框选中项变化，会触发handleChange函数，tab 页签点击事件会触发handleTabClick函数
+         
+    ```  
+       // 动态参数的数据
+      manyTableData: [],
+      // 静态属性的数据
+      onlyTableData: [],
+    handleChange() {
+     console.log(this.selectedCateKeys)
+     this.getParamsData()
+    },
+     // tab 页签点击事件的处理函数
+    handleTabClick() {
+      this.getParamsData()
+    },
+     // 获取参数的列表数据
+    async getParamsData() {
+      // 证明选中的不是三级分类
+      if (this.selectedCateKeys.length !== 3) {
+        this.selectedCateKeys = []
+        return
+      }
+
+      // 证明选中的是三级分类
+      console.log(this.selectedCateKeys)
+      // 根据所选分类的Id，和当前所处的面板，获取对应的参数
+      const { data: res } = await this.$http.get(
+        `categories/${this.cateId}/attributes`,
+        {
+          params: { sel: this.activeName }
+        }
+      )
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取参数列表失败！')
+      }
+
+      console.log(res.data)
+      if (this.activeName === 'many') {
+        this.manyTableData = res.data
+      } else {
+        this.onlyTableData = res.data
+      }
+    }
+    ```
