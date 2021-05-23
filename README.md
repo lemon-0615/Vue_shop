@@ -645,7 +645,7 @@ async removeRightById(role, rightId){
   ```
  ### 分类参数
     * el-tabs 组件页签，el-tab-pane 组件面板
-```
+ ```
      <!-- tab 页签区域 -->
       // v-model => 将激活的页签name名称动态地绑定到对应的值身上；点击事件@tab-click，点击页签后触发的函数
       <el-tabs v-model="activeName" @tab-click="handleTabClick"> 
@@ -653,7 +653,7 @@ async removeRightById(role, rightId){
         <el-tab-pane label="动态参数" name="many"> //label来指定显示的标题，name是页签的唯一名称
          <!-- 添加静态属性的面板 -->
         <el-tab-pane label="静态属性" name="only">
-```
+ ```
     *  级联选择框选中项变化，会触发handleChange函数，tab 页签点击事件会触发handleTabClick函数      
 ```  
        // 动态参数的数据
