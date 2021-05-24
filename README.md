@@ -887,9 +887,13 @@ async removeRightById(role, rightId){
     }
 ```
 + 阻止页签切换
-   1.为el-tabs绑定一个属性before-leave，
+         
+   1.为el-tabs绑定一个属性before-leave
+         
    2. 指定事件处理函数beforeTabLeave
+         
    3.在函数形参中得到即将离开和进入的名字，oldActiveName，activeName，在函数里进行判断是否可以切换
+         
    ```
     <el-tabs v-model = "activeIndex" :tab-position="'left'" :before-leave="beforeTabLeave">     
     beforeTabLeave(activeName, oldActiveName) {
