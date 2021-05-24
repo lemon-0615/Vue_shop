@@ -657,25 +657,29 @@ async removeRightById(role, rightId){
     ```
          
 *  级联选择框选中项变化，会触发handleChange函数，tab 页签点击事件会触发handleTabClick函数 
-         
+*  在展开行下添加tag标签，用v-for循环遍历渲染
+*  在获取数据的函数中，用gor循环将attr_vals字符串变数组         
 ```
        // 动态参数的数据
       manyTableData: [],
       // 静态属性的数据
       onlyTableData: [],
+  // 级联选择框选中项变化，会触发这个函数
     handleChange() {
-     console.log(this.selectedCateKeys)
      this.getParamsData()
     },
      // tab 页签点击事件的处理函数
     handleTabClick() {
       this.getParamsData()
     },
-     // 获取参数的列表数据
+        // 获取参数的列表数据
     async getParamsData() {
       // 证明选中的不是三级分类
       if (this.selectedCateKeys.length !== 3) {
         this.selectedCateKeys = []
+        // 清空表格数据
+        this.manyTableData = []
+        this.onlyTableData = []
         return
       }
 
@@ -694,10 +698,74 @@ async removeRightById(role, rightId){
       }
 
       console.log(res.data)
+      //用forEach循环，字符串变数组
+      res.data.forEach(item=>{
+        item.attr_vals = item.attr_vals ?
+        item.attr_vals=item.attr_vals.split('') : [] //字符串变数组
+        // 控制文本框的显示与隐藏
+        item.inputVisible = false
+        // 文本框的输入值
+        item.inputValue = ''
+
+      })
       if (this.activeName === 'many') {
         this.manyTableData = res.data
       } else {
         this.onlyTableData = res.data
       }
+    },
+   
+   //在前面<template>组件里
+  <!-- 循环渲染tag标签 -->
+    <el-tag v-for="(item,i) in scope.row.attr_vals" :key="i" closable  @close="handleClose(i, scope.row)">{{item}}</el-tag>
+ ```
+  
+* 输入文本框和按钮切换通过v-if和v-else用布尔值inputvisible
+* v-model双向绑定文本框内的值
+* ref: saveTagInput引用对象
+* 事件绑定:键盘弹起，失去焦点时触发函数handleInputConfirm(scope.row)        
+ ```
+<!-- 输入文本框 -->
+ <el-input class="input-new-tag" v-if="scope.row.inputVisible" v-model="scope.row.inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(scope.row)" @blur="handleInputConfirm(scope.row)">
+  </el-input>
+   <!-- 添加按钮 -->
+  <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag</el-button>
+ ```
+         
+*  将对attr_vals（Tag）的操作保存到数据库
+  ```
+  async saveAttrVals (row) {
+      const { data: res } = await this.$http.put(
+        `categories/${this.getCateId}/attributes/${row.attr_id}`,
+        {
+          attr_name: row.attr_name,
+          attr_sel: row.attr_sel,
+          attr_vals: row.attr_vals.join(' ')
+        }
+      )
+      if (res.meta.status !== 200) {
+        return this.$message.error('修改参数项失败！')
+      }
+      this.$message.success('修改参数项成功！')
+    }
+   ```
+   * 点击按钮显示输入框
+    ```
+      showInput (row) {
+        row.inputVisible = true
+        //   让输入框自动获取焦点
+        // $nextTick方法的作用：当页面元素被重新渲染之后，才会至指定回调函数中的代码
+        this.$nextTick(_ => {
+         this.$refs.saveTagInput.$refs.input.focus()
+       })
+       },
+    ```
+* 删除对应的参数可选项
+```
+    handleClose (i, row) {
+      row.attr_vals.splice(i, 1)
+  // 提交数据库，保存修改
+      this.saveAttrVals(row)
     }
  ```
+   ```
