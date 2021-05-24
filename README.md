@@ -785,5 +785,9 @@ async removeRightById(role, rightId){
 })
          
 ```
-         
-         
+ + input搜索与清空的功能,绑定queryInfo信息的query属性，在按钮点击搜索和点击x是都要调用getGoodsList函数，取对应的商品列表       
+ ```
+  <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getGoodsList">
+    <el-button slot="append" icon="el-icon-search" @click="getGoodsList"></el-button>
+  </el-input>       
+ ```
