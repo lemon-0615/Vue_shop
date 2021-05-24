@@ -749,8 +749,8 @@ async removeRightById(role, rightId){
       this.$message.success('修改参数项成功！')
     }
    ```
-   * 点击按钮显示输入框
-    ```
+* 点击按钮显示输入框
+   ```
       showInput (row) {
         row.inputVisible = true
         //   让输入框自动获取焦点
@@ -759,7 +759,7 @@ async removeRightById(role, rightId){
          this.$refs.saveTagInput.$refs.input.focus()
        })
        },
-    ```
+   ```
 * 删除对应的参数可选项
 ```
     handleClose (i, row) {
@@ -768,4 +768,4 @@ async removeRightById(role, rightId){
       this.saveAttrVals(row)
     }
  ```
-   ```
+  
