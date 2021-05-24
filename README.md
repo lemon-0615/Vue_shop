@@ -768,4 +768,22 @@ async removeRightById(role, rightId){
       this.saveAttrVals(row)
     }
  ```
-  
+ ### 商品列表GoodsList
+   + 自定义格式化时间的全局过滤器，在mian.js中定义全局过滤器，这样定义完成之后每个组件都可以调用它了
+         
+```
+  Vue.filter('dateFormat', function(originVal) {
+    //dateFormat是名字，function是过滤器处理函数
+  const dt = new Date(originVal)
+  const y = dt.getFullYear()
+  const m = (dt.getMonth() + 1 + '').padStart(2, '0')
+  const d = (dt.getDate() + '').padStart(2, '0')
+  const hh = (dt.getHours() + '').padStart(2, '0')
+  const mm = (dt.getMinutes() + '').padStart(2, '0')
+  const ss = (dt.getSeconds() + '').padStart(2, '0')
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+})
+         
+```
+         
+         
