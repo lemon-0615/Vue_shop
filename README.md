@@ -972,3 +972,8 @@ async removeRightById(role, rightId){
     }
     }
      ```
+### 商品添加组件区域中上传图片的功能 el-upload 
+ * action 表示图片要上传到的后台API地址  
+ * 处理图片预览效果函数handlePreview()
+ * 处理移除图片的操作函数handleRemove()
+ *  指定预览组件的呈现方式,list-type，指定upload的渲染效果
