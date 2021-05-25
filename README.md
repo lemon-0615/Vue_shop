@@ -908,6 +908,7 @@ async removeRightById(role, rightId){
 - 请求成功，将数据保存在相应数组里用forEach循环，将字符串转换为数组
 - 渲染表单的Item项，用v-for遍历数组，绑定item的attr_name到label里
 - Item项里放入复选框，<el-checkbox>，用v-for遍历数组item的attr_vals
+- this.activeIndex为1证明访问的是静态属性面板
      ```
      <el-tab-pane label="商品参数" name="1">
          <!-- 渲染表单的Item项 -->
@@ -918,7 +919,12 @@ async removeRightById(role, rightId){
               </el-checkbox-group>
             </el-form-item>
     </el-tab-pane>
-     
+      <el-tab-pane label="商品属性" name="2">
+       //用v-for遍历数组，绑定item的attr_name到label里，input输入框绑定item的attr_vals
+        <el-form-item :label="item.attr_name" v-for="item in onlyTableData" :key="item.attr_id">
+              <el-input v-model="item.attr_vals"></el-input>
+            </el-form-item>
+    </el-tab-pane>
        async tabClicked() {
       // 证明访问的是动态参数面板
       if (this.activeIndex === '1') {
