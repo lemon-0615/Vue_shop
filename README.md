@@ -902,3 +902,67 @@ async removeRightById(role, rightId){
       }
     },
    ```
+- tab被选中时触发的事件，tab-click, @绑定一个事件，事件处理函数为tabClicked
+- 处理函数，tabClicked(),发起get请求，获取动态参数列表数据，同时向服务器发送参数sel
+- 请求路径中的:id较为复杂，在computed里定义一个计算属性cateId，得到id值
+- 请求成功，将数据保存在相应数组里用forEach循环，将字符串转换为数组
+- 渲染表单的Item项，用v-for遍历数组，绑定item的attr_name到label里
+- Item项里放入复选框，<el-checkbox>，用v-for遍历数组item的attr_vals
+     ```
+     <el-tab-pane label="商品参数" name="1">
+         <!-- 渲染表单的Item项 -->
+            <el-form-item :label="item.attr_name" v-for="item in manyTableData" :key="item.attr_id">
+              <!-- 复选框组 -->
+              <el-checkbox-group v-model="item.attr_vals">
+                <el-checkbox :label="cb" v-for="(cb, i) in item.attr_vals" :key="i" border></el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+    </el-tab-pane>
+     
+       async tabClicked() {
+      // 证明访问的是动态参数面板
+      if (this.activeIndex === '1') {
+        const { data: res } = await this.$http.get(
+          `categories/${this.cateId}/attributes`,
+          {
+            params: { sel: 'many' }  //用get向服务器发送一个参数sel
+          }
+        )
+
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取动态参数列表失败！')
+        }
+
+        console.log(res.data)
+        res.data.forEach(item => {
+          item.attr_vals =
+            item.attr_vals.length === 0 ? [] : item.attr_vals.split(' ')
+        })
+        this.manyTableData = res.data
+      } else if (this.activeIndex === '2') {
+        const { data: res } = await this.$http.get(
+          `categories/${this.cateId}/attributes`,
+          {
+            params: { sel: 'only' } //用get向服务器发送一个参数sel
+          }
+        )
+
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取静态属性失败！')
+        }
+
+        console.log(res.data)
+        this.onlyTableData = res.data
+      }
+    }
+    },
+    // 定义一个计算属性cateId，得到id值
+    computed: {
+           cateId() {
+      if (this.addForm.goods_cat.length === 3) {
+        return this.addForm.goods_cat[2]
+      }
+      return null
+    }
+    }
+     ```
