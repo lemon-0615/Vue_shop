@@ -1018,7 +1018,7 @@ async removeRightById(role, rightId){
     },
       
  ```
-### 富文本编辑器 VueQuillEditor（在main.js文件里）
+### 富文本编辑器 VueQuillEditor（在main.js文件里导入）
 * 安装并导入富文本编辑器 
 * 用Vue.use来注册为全局可用的组件 
 * 使用富文本编辑器组件，内容双向绑定到data中，将输入的内容保存在addForm的goods_introduce中
@@ -1032,14 +1032,14 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
  //将富文本编辑器注册为全局可用的组件
 Vue.use(VueQuillEditor)
- <!-- 添加商品的按钮 -->
- <el-button type="primary" class="btnAdd" @click="add">添加商品</el-button>
+ <!--富文本编辑器组件-->
+  <quill-editor v-model="addForm.goods_introduce"> </quill-editor>
 ```
 ### 添加商品的按钮，绑定点击事件add进行添加商品
 + 添加商品前进行表单预验证，调用表单引用对象的addFormRef的validate函数进行判断
 + 执行添加的业务逻辑，在真正发起请求之前，用深拷贝，把对象原封不动拷贝一份，和原对象无关，这样就不会影响级联选择器里绑定的addForm.goods_cat的字符串形式
 + 在add函数里,循环遍历处理动态参数列表和静态参数列表,得到新对象，将新对象push到attrs里
-
++ 用http的post方法发起请求添加商品，注意商品的名称，必须是唯一的
 ```
  <!-- 添加商品的按钮 -->
  <el-button type="primary" class="btnAdd" @click="add">添加商品</el-button>
@@ -1077,7 +1077,6 @@ Vue.use(VueQuillEditor)
         if (res.meta.status !== 201) {
           return this.$message.error('添加商品失败！')
         }
-
         this.$message.success('添加商品成功！')
         this.$router.push('/goods')
       })
