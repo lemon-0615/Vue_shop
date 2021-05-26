@@ -974,6 +974,111 @@ async removeRightById(role, rightId){
      ```
 ### 商品添加组件区域中上传图片的功能 el-upload 
  * action 表示图片要上传到的后台API地址  
- * 处理图片预览效果函数handlePreview()
- * 处理移除图片的操作函数handleRemove()
- *  指定预览组件的呈现方式,list-type，指定upload的渲染效果
+ * 图片预览，监听on-preview事件，事件处理图片预览效果函数handlePreview()里接受到了图片处理信息，得到路径，放置一个预览窗口，动态绑定图片
+ * 处理移除图片的操作函数handleRemove()，获取要删除的图片file的临时路径；从 pics 数组中，找到这个图片对应的索引值，调用数组的 findIndex方法找到后用splice 方法从 pics 数组中移除
+ * 指定预览组件的呈现方式,list-type，指定upload的渲染效果
+ * 通过axios的request拦截器为每一个请求都挂载了一个Authorization的字段，字段的值就是token，每一次用axios发请求时候都会自动追加一个token，但是在调用upload组件时候，在发送ajax请求是没有用到axios，故是会产生无效token，这个组件自己封装了一套ajax，没用到axios
+ * upload组件的属性有一个headers的属性，可以用来这是上传的请求头部。在每一次上传图片期间，都要手动指定headers指定头
+ * 上传图片之后，监听图片上传成功的事件，绑定on-success属性，处理函数handleSuccess()
+```
+// 图片上传组件的headers请求头对象
+  headerObj: {
+     Authorization: window.sessionStorage.getItem('token')
+     },
+  <!-- action 表示图片要上传到的后台API地址 -->
+<el-upload :action="uploadURL" :on-preview="handlePreview" :on-remove="handleRemove" list-type="picture" :headers="headerObj" :on-success="handleSuccess">
+ <el-button size="small" type="primary">点击上传</el-button>
+    <div slot = "tip" class = "el-upload_tip">只能上传jpg/png文件，且不超过500kb</div>
+ </el-upload>
+ // 处理图片预览效果
+ handlePreview(file) {
+      console.log(file)
+      this.previewPath = file.response.data.url
+      this.previewVisible = true
+    },
+  // 处理移除图片的操作
+    handleRemove(file) {
+      // console.log(file)
+      // 1. 获取将要删除的图片的临时路径
+      const filePath = file.response.data.tmp_path
+      // 2. 从 pics 数组中，找到这个图片对应的索引值
+      const i = this.addForm.pics.findIndex(x => x.pic === filePath)
+      // 3. 调用数组的 splice 方法，把图片信息对象，从 pics 数组中移除
+      this.addForm.pics.splice(i, 1)
+      console.log(this.addForm)
+    },
+// 监听图片上传成功的事件
+    handleSuccess(response) {
+      console.log(response)
+      // 1. 拼接得到一个图片信息对象,pic的值为response.data.tmp_path
+      const picInfo = { pic: response.data.tmp_path }
+      // 2. 将图片信息对象，push 到pics数组中，addForm是添加商品的表单数据对象，里面增加了图片的数组pics:[]
+      this.addForm.pics.push(picInfo)
+      console.log(this.addForm)
+    },
+      
+ ```
+### 富文本编辑器 VueQuillEditor（在main.js文件里）
+* 安装并导入富文本编辑器 
+* 用Vue.use来注册为全局可用的组件 
+* 使用富文本编辑器组件，内容双向绑定到data中，将输入的内容保存在addForm的goods_introduce中
+* 添加商品的按钮，绑定点击事件add处理函数进行添加商品
+  ```
+ // 导入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+// require styles 导入富文本编辑器对应的样式
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+ //将富文本编辑器注册为全局可用的组件
+Vue.use(VueQuillEditor)
+ <!-- 添加商品的按钮 -->
+ <el-button type="primary" class="btnAdd" @click="add">添加商品</el-button>
+  ```
+### 添加商品的按钮，绑定点击事件add进行添加商品
++ 添加商品前进行表单预验证，调用表单引用对象的addFormRef的validate函数进行判断
++ 执行添加的业务逻辑，在真正发起请求之前，用深拷贝，把对象原封不动拷贝一份，和原对象无关，这样就不会影响级联选择器里绑定的addForm.goods_cat的字符串形式
++ 在add函数里,循环遍历处理动态参数列表和静态参数列表,得到新对象，将新对象push到attrs里
+```
+ <!-- 添加商品的按钮 -->
+ <el-button type="primary" class="btnAdd" @click="add">添加商品</el-button>
+      // 添加商品
+    add() {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) {
+          return this.$message.error('请填写必要的表单项！')
+        }
+        // 执行添加的业务逻辑
+        // 用深拷贝，把对象原封不动拷贝一份，和原对象无关，这样就不会影响级联选择器里绑定的addForm.goods_cat的字符串形式
+        // lodash   cloneDeep(obj)
+        const form = _.cloneDeep(this.addForm)
+        form.goods_cat = form.goods_cat.join(',')
+        // 处理动态参数,遍历manyTableData，将attr_vals转为数组
+        this.manyTableData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_value: item.attr_vals.join(' ')
+          }
+          this.addForm.attrs.push(newInfo)
+        })
+        // 处理静态属性
+        this.onlyTableData.forEach(item => {
+          const newInfo = { attr_id: item.attr_id, attr_value: item.attr_vals }
+          this.addForm.attrs.push(newInfo)
+        })
+        form.attrs = this.addForm.attrs
+        console.log(form)
+
+        // 发起请求添加商品
+        // 商品的名称，必须是唯一的
+        const { data: res } = await this.$http.post('goods', form)
+
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加商品失败！')
+        }
+
+        this.$message.success('添加商品成功！')
+        this.$router.push('/goods')
+      })
+    }
+```
