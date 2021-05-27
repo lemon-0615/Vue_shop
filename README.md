@@ -37,6 +37,16 @@ npm install
 # develop
 npm run serve
 ```
+## 项目概述
+### 电商项目基本业务概述
+根据不同的应用场景，电商系统一般都提供了 PC 端、移动 APP、移动 Web、微信小程序等多种终端访问方式。
+![电商后台管理系统的功能](https://github.com/lemon-0615/vue_shop/image/电商项目基本业务概述.png)
+### 电商后台管理系统的功能
+电商后台管理系统用于管理用户账号、商品分类、商品信息、订单、数据统计等业务功能。
+![电商后台管理系统的功能](https://github.com/lemon-0615/vue_shop/image/电商后台管理系统的功能.png)
+### 电商后台管理系统的开发模式（前后端分离）
+电商后台管理系统的开发模式（前后端分离）
+![电商后台管理系统的开发模式(前后端分离)](https://github.com/lemon-0615/vue_shop/image/电商后台管理系统的开发模式(前后端分离).png)
 ## 过程笔记
 ### 前端项目初试化步骤
  1. 安装Vue脚手架
@@ -56,7 +66,7 @@ npm run serve
     + 通过cookie在客户端记录
     + 通过seeion在服务器端记录状态
     + 通过token方式维持状态
-    
+![token原理分析](https://github.com/lemon-0615/vue_shop/image/token原理分析.png)    
 ### 表单内容数据验证
 + 为<el-form>通过属性绑定指定一个rules校验对象
 + 在data数据中定义校验对象rules，每一个属性对应一个规则
