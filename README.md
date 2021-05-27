@@ -40,13 +40,13 @@ npm run serve
 ## 项目概述
 ### 电商项目基本业务概述
 根据不同的应用场景，电商系统一般都提供了 PC 端、移动 APP、移动 Web、微信小程序等多种终端访问方式。
-![电商后台管理系统的功能](https://github.com/lemon-0615/vue_shop/image/电商项目基本业务概述.png)
+![电商后台管理系统的功能](https://github.com/lemon-0615/vue_shop/blob/master/image/%E7%94%B5%E5%95%86%E9%A1%B9%E7%9B%AE%E5%9F%BA%E6%9C%AC%E4%B8%9A%E5%8A%A1%E6%A6%82%E8%BF%B0.png)
 ### 电商后台管理系统的功能
 电商后台管理系统用于管理用户账号、商品分类、商品信息、订单、数据统计等业务功能。
-![电商后台管理系统的功能](https://github.com/lemon-0615/vue_shop/image/电商后台管理系统的功能.png)
+![电商后台管理系统的功能](https://github.com/lemon-0615/vue_shop/blob/master/image/%E7%94%B5%E5%95%86%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8A%9F%E8%83%BD.png)
 ### 电商后台管理系统的开发模式（前后端分离）
 电商后台管理系统的开发模式（前后端分离）
-![电商后台管理系统的开发模式(前后端分离)](https://github.com/lemon-0615/vue_shop/image/电商后台管理系统的开发模式(前后端分离).png)
+![电商后台管理系统的开发模式(前后端分离)](https://github.com/lemon-0615/vue_shop/blob/master/image/%E7%94%B5%E5%95%86%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F(%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB).png)
 ## 过程笔记
 ### 前端项目初试化步骤
  1. 安装Vue脚手架
