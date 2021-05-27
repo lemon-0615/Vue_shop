@@ -68,6 +68,7 @@ npm run serve
     + 通过token方式维持状态
 ![token原理分析](https://github.com/lemon-0615/vue_shop/blob/master/image/token%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90.png)   
 + 登录界面
+
 ![登录界面](https://github.com/lemon-0615/vue_shop/blob/master/image/%E7%99%BB%E5%BD%95%E7%95%8C%E9%9D%A2.png)
 ### 表单内容数据验证
 + 为<el-form>通过属性绑定指定一个rules校验对象
