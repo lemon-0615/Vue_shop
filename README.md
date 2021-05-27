@@ -1204,7 +1204,7 @@ Vue.use(VueQuillEditor)
        * 用option指定图表的配置项和数据 var option={}
        * 将myChart实例调用一个setOption函数，把对应的数据放置进去，展示数据
        * 用http的get请求获取数据，将服务器返回的数据和options进行合并才可以得到完整的数据
-```
+ ```
 data() {
        return{
    // 需要合并的数据
@@ -1253,4 +1253,4 @@ data() {
     myChart.setOption(result)
    
    },
- ```
+  ```
