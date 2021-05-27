@@ -499,7 +499,7 @@ async removeRightById(role, rightId){
   * 渲染分页页码条<el-pagination> </el-pagination>
   * 增加事件处理函数，handleSizeChange(newSize)来监听pagesize改变
   * 增加事件处理函数，handleCurrentChange(newPage)监听 pagenum 改变
-        
+  * 当前的页面数current-page双向绑定到querInfo.pagenum 
   ```
      
      <!--分页区域-->
@@ -1092,3 +1092,165 @@ Vue.use(VueQuillEditor)
       })
     }
 ```
+### 订单列表
++ 用http的get请求获取订单数据列表
+```     
+     async getOrderList() {
+      const { data: res } = await this.$http.get('orders', {
+        params: this.queryInfo
+      })
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取订单列表失败！')
+      }
+
+      console.log(res)
+      this.total = res.data.total
+      this.orderlist = res.data.goods
+    },
+```
++ 渲染tab表格
++ 在表格栏组件中的prop属性进行一一对应，订单编号-prop:order_number，订单价格-prop:order_price，是否付款-prop:pay_status
++ 在是否付款的表格栏内，利用作用域插槽渲染，用if-else判断pay_status的值来觉得渲染已付款的tag还是未付款的tag
++ 在下单时间的表格栏内，利用作用域插槽渲染
++ 在操作的表格栏内利用作用域插槽渲染不同的结构，获取dateFormat
+     
+ ```
+     <!-- 订单列表数据 -->
+      <el-table :data="orderlist" border stripe>
+        <el-table-column type="index"></el-table-column>
+        <el-table-column label="订单编号" prop="order_number"></el-table-column>
+        <el-table-column label="订单价格" prop="order_price"></el-table-column>
+        <el-table-column label="是否付款" prop="pay_status">
+            <template slot-scope="scope">
+            <el-tag type="success" v-if="scope.row.pay_status === '1'">已付款</el-tag>
+            <el-tag type="danger" v-else>未付款</el-tag>
+          </template>
+        </el-table-column>
+         <el-table-column label="下单时间" prop="create_time">
+          <template slot-scope="scope">
+            {{scope.row.create_time | dateFormat}}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="">
+            <el-button size="mini" type="primary" icon="el-icon-edit" @click="showBox"></el-button>
+            <el-button size="mini" type="success" icon="el-icon-location" @click="showProgressBox"></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+ ```
++ 添加修改地址的对话框，对话框内加入表单组件，表单组件内加入级联选择器（其options绑定cityData）和iput输入框
++ 在点击location按钮时候触发showProgressBox函数，在函数中触发展示物流进度的对话框
++ 物流进度的数据获取在showProgressBox函数中通过http的get请求获取物流进度
+  ```
+     //按钮
+      <el-button size="mini" type="success" icon="el-icon-location" @click="showProgressBox">
+   <!-- 修改地址的对话框 -->
+    <el-dialog title="修改地址" :visible.sync="addressVisible" width="50%" @close="addressDialogClosed">
+      <el-form :model="addressForm" :rules="addressFormRules" ref="addressFormRef" label-width="100px">
+        <el-form-item label="省市区/县" prop="address1">
+          <el-cascader :options="cityData" v-model="addressForm.address1"></el-cascader>
+        </el-form-item>
+        <el-form-item label="详细地址" prop="address2">
+          <el-input v-model="addressForm.address2"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addressVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addressVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+       
+   <!-- 展示物流进度的对话框 -->
+    <el-dialog title="物流进度" :visible.sync="progressVisible" width="50%">
+      <!-- 时间线 -->
+      <el-timeline>
+        <el-timeline-item v-for="(activity, index) in progressInfo" :key="index" :timestamp="activity.time">
+          {{activity.context}}
+        </el-timeline-item>
+      </el-timeline>
+    </el-dialog>
+   async showProgressBox() {
+      const { data: res } = await this.$http.get('/kuaidi/804909574412544580')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取物流进度失败！')
+      }
+      this.progressInfo = res.data
+      this.progressVisible = true
+      console.log(this.progressInfo)
+    }
+  ```
+### 使用Timeline时间线组件（在element2.6.0版本后才可以使用，现在是可以用的)
+   *  时间线容器组件<el-timeline>，时间线项组件<el-timeline-item>，通过for循环创建出来的，数据在progressInfo数组里
+   *  通过timestamp指定时间轴上的时间，将内容放在内容节点activity.context
+ ```      
+  <!-- 展示物流进度的对话框 -->
+    <el-dialog title="物流进度" :visible.sync="progressVisible" width="50%">
+      <!-- 时间线 -->
+      <el-timeline>
+        <el-timeline-item v-for="(activity, index) in progressInfo" :key="index" :timestamp="activity.time">
+          {{activity.context}}
+        </el-timeline-item>
+      </el-timeline>
+    </el-dialog>
+```
+       
+ ### echarts的使用
+       * 导入echarts对应的包
+       * 准备一个echarts的DOM区域
+       * 调用echarts的init函数，将div区域初始化为echarts的图表实例myChart
+       * 准备数据和配置项
+       * 用option指定图表的配置项和数据 var option={}
+       * 将myChart实例调用一个setOption函数，把对应的数据放置进去，展示数据
+       * 用http的get请求获取数据，将服务器返回的数据和options进行合并才可以得到完整的数据
+```
+data() {
+       return{
+   // 需要合并的数据
+      options: {
+        title: {
+          text: '用户来源'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            label: {
+              backgroundColor: '#E9EEF3'
+            }
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: [
+          {
+            boundaryGap: false
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ]
+      }
+       }
+   },
+   async  mounted() {
+    // 3. 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'))
+    const {data: res} = await this.$http.get('reports/type/1')
+    if(res.meta.status!==200){
+        return this.$message.error('获取折线图数据失败')
+    }
+    // 4.准备数据和配置项
+    const result = _.merge(res.data,this.options)
+    //5.展示数据
+    myChart.setOption(result)
+   
+   },
+ ```
