@@ -1196,13 +1196,13 @@ Vue.use(VueQuillEditor)
     </el-dialog>
 ```
 ### echarts的使用
-       * 导入echarts对应的包
-       * 准备一个echarts的DOM区域
-       * 调用echarts的init函数，将div区域初始化为echarts的图表实例myChart
-       * 准备数据和配置项
-       * 用option指定图表的配置项和数据 var option={}
-       * 将myChart实例调用一个setOption函数，把对应的数据放置进去，展示数据
-       * 用http的get请求获取数据，将服务器返回的数据和options进行合并才可以得到完整的数据
+* 导入echarts对应的包
+* 准备一个echarts的DOM区域
+* 调用echarts的init函数，将div区域初始化为echarts的图表实例myChart
+* 准备数据和配置项
+* 用option指定图表的配置项和数据 var option={}
+* 将myChart实例调用一个setOption函数，把对应的数据放置进去，展示数据
+* 用http的get请求获取数据，将服务器返回的数据和options进行合并才可以得到完整的数据
    ```
   data() {
          return{
