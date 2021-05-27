@@ -1195,8 +1195,7 @@ Vue.use(VueQuillEditor)
       </el-timeline>
     </el-dialog>
 ```
-       
- ### echarts的使用
+### echarts的使用
        * 导入echarts对应的包
        * 准备一个echarts的DOM区域
        * 调用echarts的init函数，将div区域初始化为echarts的图表实例myChart
@@ -1204,53 +1203,53 @@ Vue.use(VueQuillEditor)
        * 用option指定图表的配置项和数据 var option={}
        * 将myChart实例调用一个setOption函数，把对应的数据放置进去，展示数据
        * 用http的get请求获取数据，将服务器返回的数据和options进行合并才可以得到完整的数据
- ```
-data() {
-       return{
-   // 需要合并的数据
-      options: {
-        title: {
-          text: '用户来源'
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross',
-            label: {
-              backgroundColor: '#E9EEF3'
+   ```
+  data() {
+         return{
+     // 需要合并的数据
+        options: {
+          title: {
+            text: '用户来源'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross',
+              label: {
+                backgroundColor: '#E9EEF3'
+              }
             }
-          }
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: [
-          {
-            boundaryGap: false
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value'
-          }
-        ]
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: [
+            {
+              boundaryGap: false
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value'
+            }
+          ]
+        }
+         }
+     },
+     async  mounted() {
+      // 3. 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById('main'))
+      const {data: res} = await this.$http.get('reports/type/1')
+      if(res.meta.status!==200){
+          return this.$message.error('获取折线图数据失败')
       }
-       }
-   },
-   async  mounted() {
-    // 3. 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('main'))
-    const {data: res} = await this.$http.get('reports/type/1')
-    if(res.meta.status!==200){
-        return this.$message.error('获取折线图数据失败')
-    }
-    // 4.准备数据和配置项
-    const result = _.merge(res.data,this.options)
-    //5.展示数据
-    myChart.setOption(result)
-   
-   },
-  ```
+      // 4.准备数据和配置项
+      const result = _.merge(res.data,this.options)
+      //5.展示数据
+      myChart.setOption(result)
+
+     },
+   ```
