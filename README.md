@@ -66,7 +66,7 @@ npm run serve
     + 通过cookie在客户端记录
     + 通过seeion在服务器端记录状态
     + 通过token方式维持状态
-![token原理分析](https://github.com/lemon-0615/vue_shop/image/token原理分析.png)    
+![token原理分析](https://github.com/lemon-0615/vue_shop/blob/master/image/token%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90.png)    
 ### 表单内容数据验证
 + 为<el-form>通过属性绑定指定一个rules校验对象
 + 在data数据中定义校验对象rules，每一个属性对应一个规则
