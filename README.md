@@ -1267,4 +1267,21 @@ Vue.use(VueQuillEditor)
    * 安装NProgess插件，并在request拦截器开启进度条，在response拦截器中结束进度条
    * 根据ESLint报警信息修改项目
    * 安装babel-plugin-transform-remove-console插件并使用该插件移除console信息
-  
+  ### 首页内容定制
+   * 不同的打包环境下，首页内容可能会有所不同。我们可以通过插件的方式进行定制，插件配置如下： 
+    ```      
+ chainWebpack: config => {
+ config.when(process.env.NODE_ENV === 'production', config => {
+ config.plugin('html').tap(args => {
+ args[0].isProd = true
+ return args
+ })
+ })
+ config.when(process.env.NODE_ENV === 'development', config => {
+ config.plugin('html').tap(args => {
+ args[0].isProd = false
+ return args
+ })
+ })
+}
+   ```
