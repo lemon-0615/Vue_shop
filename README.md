@@ -1268,8 +1268,9 @@ Vue.use(VueQuillEditor)
    * 根据ESLint报警信息修改项目
    * 安装babel-plugin-transform-remove-console插件并使用该插件移除console信息
   ### 首页内容定制
-   * 不同的打包环境下，首页内容可能会有所不同。我们可以通过插件的方式进行定制，插件配置如下： 
-    ```      
+   * 不同的打包环境下，首页内容可能会有所不同。我们可以通过插件的方式进行定制
+   * 当处于产品发布模式，让参数的isProd为true，根据isProd的值来决定渲染页面的结构
+```      
  chainWebpack: config => {
  config.when(process.env.NODE_ENV === 'production', config => {
  config.plugin('html').tap(args => {
@@ -1284,4 +1285,46 @@ Vue.use(VueQuillEditor)
  })
  })
 }
-   ```
+```
+ * 在 public/index.html 首页中，可以根据 isProd 的值，来决定如何渲染页面结构
+ * isPrid为true，即为发布模式，可以渲染CDN链接
+```
+<!– 按需渲染页面的标题 -->
+<title><%= htmlWebpackPlugin.options.isProd ? '' : 'dev - ' %>电商后台管理系统</title>
+<!– 按需加载外部的 CDN 资源 -->
+<% if(htmlWebpackPlugin.options.isProd) { %>
+<!—通过 externals 加载的外部 CDN 资源-->
+<% } %>
+ 
+```
+### 路由懒加载
+当打包构建项目时，JavaScript 包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就更加高效了。
+ 
+具体需要 3 步：
+ * 安装 @babel/plugin-syntax-dynamic-import 包。
+ * 在 babel.config.js 配置文件中声明该插件。 '@babel/plugin-syntax-dynamic-import'
+ * 将路由改为按需加载的形式，示例代码如下：
+``` 
+ const Foo = () => import(/* webpackChunkName: "group-foo" */ './Foo.vue')
+ const Bar = () => import(/* webpackChunkName: "group-foo" */ './Bar.vue')
+ const Baz = () => import(/* webpackChunkName: "group-boo" */ './Baz.vue')
+```
+
+## 项目上线
+### 项目上线相关配置
+1. 通过 node 创建 web 服务器。
+ 创建 node 项目，并安装 express，通过 express 快速创建 web 服务器，将 vue 打包生成的 dist 文件夹，托管为静态资源即可，关键代码如下：
+```
+ const express = require('express')
+// 创建 web 服务器
+const app = express()
+// 托管静态资源
+app.use(express.static('./dist'))
+// 启动 web 服务器
+app.listen(80, () => {
+ console.log('web server running at http://127.0.0.1')
+})
+```
+2. 开启 gzip 配置。
+3. 配置 https 服务。
+4. 使用 pm2 管理应用。
