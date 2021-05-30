@@ -1256,3 +1256,15 @@ Vue.use(VueQuillEditor)
 
      },
    ```
+## 项目优化
+  ### 项目优化策略
+   * 生成打包报告
+   * 第三方库启用CDN
+   * Element-UI组件按需加载
+   * 路由懒加载
+   * 首页内容定制
+  ### 添加加载进度条
+   * 安装NProgess插件，并在request拦截器开启进度条，在response拦截器中结束进度条
+   * 根据ESLint报警信息修改项目
+   * 安装babel-plugin-transform-remove-console插件并使用该插件移除console信息
+  
