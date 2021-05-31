@@ -1349,7 +1349,7 @@ app.listen(80, () => {
 4. 使用 pm2 管理应用。
 * 在服务器中安装 pm2：npm i pm2 -g 
 * 启动项目：pm2 start 脚本 --name 自定义名称
- 
+ ![pm2](https://github.com/lemon-0615/vue_shop/blob/master/image/pm2.png) 
 * 查看运行项目：pm2 ls 
 * 重启项目：pm2 restart 自定义名称
 * 停止项目：pm2 stop 自定义名称
