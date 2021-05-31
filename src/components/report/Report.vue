@@ -56,7 +56,7 @@ export default{
        }
    },
    created() {},
-    // 此时，页面上的元素，已经被渲染完毕了！
+ // 此时，页面上的元素，已经被渲染完毕了！
  async  mounted() {
     // 3. 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'))
