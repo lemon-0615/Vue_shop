@@ -114,21 +114,23 @@ data () {
     },
    ```
  ### 登录前表单数据的预验证
+ 在点击登录的时候通过调用表单的某个函数进行预验证
  通过ref定义引用，拿到表单实例对象：
  + 为表单添加ref引用，值为组件实例对象
  + 通过this.$refs.引用对象.valiadate()进行预校验
- + 在validate 中接收回调函数，返回验证结果
+ + 在validate 中接收回调函数，返回验证结果（表单的validate函数通过对整个表单进行校验的方法，参数为一个回调函数。该函数会在校验结束之后被调用，并传入两个参数，是否校验成功和未通过校验的字段，若不传入回调函数，则会返回一个promise。如何调用validate，只需要拿到表单的引用对象，给form添加ref
   ```
     login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
-        const { data: res } = await this.$http.post('login', this.loginForm)
+         // 请求地址login，请求方法：post，请求参数：username,password，服务器返回对应的请求结果
+        const { data: res } = await this.$http.post('login', this.loginForm) //loginForm是登录表单的数据绑定对象，如果返回对象是Promise，则可以用async，await简化
         if (res.meta.status !== 200) return this.$message.error('登录失败！')
-        this.$message.success('登录成功')
-        // 1. 将登录成功之后的 token，保存到客户端的 sessionStorage 中
+        this.$message.success('登录成功')//弹框提示，Message全局弹框
+        //   1. 将登录成功之后的 token，保存到客户端的 sessionStorage 中
         //   1.1 项目中出了登录之外的其他API接口，必须在登录之后才能访问
         //   1.2 token 只应在当前网站打开期间生效，所以将 token 保存在 sessionStorage 中
-        window.sessionStorage.setItem('token', res.data.token)
+        window.sessionStorage.setItem('token', res.data.token)//将token值放入到sessionStorage里
         // 2. 通过编程式导航跳转到后台主页，路由地址是 /home
         this.$router.push('/home')
       })
@@ -136,7 +138,7 @@ data () {
  ```
 ### 登录成功之后的操作
 
-+ 把服务器给颁发的token信息记录到客户端的seisionStorage中，因为项目中除了登录之外的其他API接口，必须在登录之后才能访问，即给其他接口提供了身份验证信息 </li>
++ 把服务器给颁发的token信息记录到客户端的sessionStorage中，因为项目中除了登录之外的其他API接口，必须在登录之后才能访问，即给其他接口提供了身份验证信息，sessionStorage是会话期间的存储机制，token 只应在当前网站打开期间生效，所以将 token 保存在 sessionStorage 中
  ```
 window.sessionStorage.setItem("token", res.data.token)
 ```
@@ -153,16 +155,19 @@ window.sessionStorge.clear()
 //跳转到登录页
 this.$router.push('/login')
 ```
-### 路由导航守卫控制访问权限
-
+   
+### 路由导航守卫控制访问权限，通过挂载路由导航守卫控制访问权限
+ * 如果用户没有登录，但是直接通过URL访问特定的页面，需要重新导航的登录页面  
+ * 为路由对象，添加beforeEach导航守卫，调用beforeEach函数，这个函数接受一个回调函数，包含三个形参，同表示即将要访问的页面，from是从哪一个路径跳转来的，nxet表示要放行的函数
 ```
 router.beforeEach((to,from,next) => {
   // to 将要访问的路径
   // from 代表从哪一个路径跳转而来
-  // next 是一个函数， 表示放行
-  //   next()  放行     next('/login') 强制跳转
+  // next 是一个函数，表示放行
+  //   next() 放行   next('/login') 强制跳转
+   //如果用户访问的是登录页，直接放行
   if(to.path === '/login') return next();
-  // 获取 token
+  // getItem获取 token
   const tokenStr = window.sessionStorage.getItem('token')
   if (!tokenStr) return next('./login')
   next()
